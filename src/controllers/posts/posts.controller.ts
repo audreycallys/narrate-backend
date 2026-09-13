@@ -11,7 +11,7 @@ import {
   postQuerySchema,
   updatePostSchema,
 } from "../../validations/posts/post.validation";
-import { and, desc, eq, inArray } from "drizzle-orm";
+import { desc, eq, inArray } from "drizzle-orm";
 
 export class PostsController {
   // Membuat Postingan
@@ -144,7 +144,7 @@ export class PostsController {
       const [post] = await db
         .select()
         .from(postsTable)
-        .where(and(eq(postsTable.id, id), eq(postsTable.status, "published")));
+        .where(eq(postsTable.id, id));
 
       if (!post) {
         return res.status(404).json({
