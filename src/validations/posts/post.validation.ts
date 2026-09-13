@@ -44,3 +44,10 @@ export const updatePostSchema = z.object({
     .pipe(z.array(z.coerce.number().int().positive()))
     .optional(),
 });
+
+export const postQuerySchema = z.object({
+  status: z
+    .enum(["draft", "published", "archived"])
+    .optional()
+    .default("published"),
+});
