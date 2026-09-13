@@ -8,6 +8,7 @@ import {
 import {
   createPostSchema,
   postIdSchema,
+  postQuerySchema,
   updatePostSchema,
 } from "../../validations/posts/post.validation";
 import { and, desc, eq, inArray } from "drizzle-orm";
@@ -89,10 +90,14 @@ export class PostsController {
   // Membaca Semua Postingan
   getPosts = async (req: Request, res: Response) => {
     try {
+      const validatedQuery = postQuerySchema.parse(req.query);
+
+      const { status } = validatedQuery;
+
       const posts = await db
         .select()
         .from(postsTable)
-        .where(eq(postsTable.status, "published"))
+        .where(eq(postsTable.status, status))
         .orderBy(desc(postsTable.createdAt));
 
       const postsWithTags = await Promise.all(
