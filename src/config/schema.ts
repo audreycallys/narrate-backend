@@ -46,6 +46,14 @@ export const postsTable = pgTable("posts", {
     .$onUpdate(() => new Date()),
 });
 
+// SAVED POSTS
+export const savedPostsTable = pgTable("saved_posts", {
+  postId: integer("post_id")
+    .primaryKey()
+    .references(() => postsTable.id, { onDelete: "cascade" }),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
 // TAGS
 export const tagsTable = pgTable("tags", {
   id: serial("id").primaryKey(),
@@ -75,22 +83,6 @@ export const postTagsTable = pgTable(
     pk: primaryKey({ columns: [table.postId, table.tagId] }),
   }),
 );
-
-// COMMENTS
-export const commentsTable = pgTable("comments", {
-  id: serial("id").primaryKey(),
-  postId: integer("post_id")
-    .notNull()
-    .references(() => postsTable.id, { onDelete: "cascade" }),
-  authorName: varchar("author_name", { length: 100 }).notNull(),
-  authorEmail: varchar("author_email", { length: 150 }),
-  comment: text("comment").notNull(),
-  createdAt: timestamp("created_at").notNull().defaultNow(),
-  updatedAt: timestamp("updated_at")
-    .notNull()
-    .defaultNow()
-    .$onUpdate(() => new Date()),
-});
 
 // PROFILES
 export const profilesTable = pgTable("profiles", {
